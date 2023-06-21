@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-class TodoError extends Equatable {
-  const TodoError(
+class BSError extends Equatable {
+  const BSError(
     this.message, [
     this.stackTrace,
   ]);
   final String message;
   final StackTrace? stackTrace;
 
-  factory TodoError.fromException(dynamic object) {
+  factory BSError.fromException(dynamic object) {
     if (object is Error) {
-      return TodoError(object.toString(), object.stackTrace);
+      return BSError(object.toString(), object.stackTrace);
     }
-    return TodoError(object.toString());
+    return BSError(object.toString());
   }
 
   @override

@@ -1,8 +1,9 @@
+import 'package:bons_it/view/dash_board_view/dash_board_view.dart';
+import 'package:bons_it/view/folder_view/folder_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bons_it/view/home_view/bloc/home_bloc.dart';
 import 'package:bons_it/view/label_view/label_view.dart';
-import 'package:bons_it/view/todo_view/todo_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -21,7 +22,7 @@ class _HomeViewState extends State<HomeView> {
 
   AppBar appBar() {
     return AppBar(
-      title: const Text("Todo"),
+      title: const Text("Bons It"),
       leading: IconButton(
         onPressed: () {},
         icon: const Icon(Icons.menu),
@@ -37,7 +38,8 @@ class _HomeViewState extends State<HomeView> {
         builder: (context, state) {
           return PageView(
             children: const [
-              TodoView(),
+              DashBoardView(),
+              FolderView(),
               LabelView(),
             ],
           );

@@ -4,15 +4,15 @@ part 'task_impl.dart';
 
 abstract class TaskRepo {
   // Task
-  Stream<String> taskStream();
+  Stream<String> folderStream();
 
-  Future<dynamic> requestTaskItem(String index);
+  Future<List<dynamic>> requestTodoFolderList();
 
-  Future<List<dynamic>> requestTskItemList();
+  Future<dynamic> requestTodoFolder(String index);
 
-  Future updateTaskItem(String index, Map<String, dynamic> data);
+  Future updateTodoFolder(String index, Map<String, dynamic> map);
 
-  Future removeTaskItem(String index);
+  Future removeTodoFolder(String index);
 
   // Label
   Stream<String> labelStream();

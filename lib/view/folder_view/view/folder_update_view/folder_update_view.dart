@@ -1,31 +1,28 @@
+import 'package:bons_it/model/todo_folder.dart';
+import 'package:bons_it/view/folder_view/view/folder_update_view/bloc/folder_update_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bons_it/model/label.dart';
-import 'package:bons_it/model/task_item.dart';
 import 'package:bons_it/repository/task/task_repo.dart';
 import 'package:bons_it/util/dialog.dart';
-import 'package:bons_it/view/label_view/view/label_select_view/label_select_view.dart';
-import 'package:bons_it/view/todo_view/view/todo_update_view/bloc/todo_update_bloc.dart';
-import 'package:bons_it/widget/label_list_tile.dart';
 import 'package:bons_it/widget/loading.dart';
 
-class TodoUpdateView extends StatefulWidget {
-  const TodoUpdateView({
+class FolderUpdateView extends StatefulWidget {
+  const FolderUpdateView({
     super.key,
     required this.item,
   });
-  final TaskItem? item;
+  final TodoFolder? item;
 
   static MaterialPageRoute route({
-    TaskItem? item,
+    TodoFolder? item,
   }) {
     return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
-          create: (_) => TodoUpdateBloc(
+          create: (_) => FolderUpdateBloc(
             RepositoryProvider.of<TaskRepo>(context),
           ),
-          child: TodoUpdateView(
+          child: FolderUpdateView(
             item: item,
           ),
         );
@@ -34,16 +31,16 @@ class TodoUpdateView extends StatefulWidget {
   }
 
   @override
-  State<TodoUpdateView> createState() => _TodoUpdateViewState();
+  State<FolderUpdateView> createState() => _FolderUpdateViewState();
 }
 
-class _TodoUpdateViewState extends State<TodoUpdateView> {
-  TodoUpdateBloc get bloc => BlocProvider.of<TodoUpdateBloc>(context);
+class _FolderUpdateViewState extends State<FolderUpdateView> {
+  FolderUpdateBloc get bloc => BlocProvider.of<FolderUpdateBloc>(context);
 
   @override
   void initState() {
     super.initState();
-    bloc.add(TodoUpdateStarted(widget.item));
+    bloc.add(FolderUpdateStarted(widget.item));
   }
 
   AppBar appBar() {
@@ -51,7 +48,7 @@ class _TodoUpdateViewState extends State<TodoUpdateView> {
       title: const Text("Update Todo"),
       leading: IconButton(
         onPressed: () {
-          bloc.add(TodoUpdateLeftView());
+          bloc.add(FolderUpdateLeftView());
         },
         icon: const Icon(Icons.arrow_back),
       ),
@@ -59,7 +56,7 @@ class _TodoUpdateViewState extends State<TodoUpdateView> {
   }
 
   Widget titleTextField({
-    required TaskItem taskItem,
+    required TodoFolder folder,
     required TextEditingController titleController,
   }) {
     return TextField(
@@ -69,63 +66,63 @@ class _TodoUpdateViewState extends State<TodoUpdateView> {
       ),
       onChanged: (value) {
         bloc.add(
-          TodoUpdateChangedTask(
-            taskItem.copyWith(title: value),
+          FolderUpdateChangedFolder(
+            folder.copyWith(title: value),
           ),
         );
       },
     );
   }
 
-  Widget labelPicker({
-    required TaskItem taskItem,
-    required List<Label> labelList,
-    required List<String> selectedLabelList,
-  }) {
-    void selectLabel() async {
-      final List<String>? res = await Navigator.of(context).push(
-        LabelSelectView.route(
-          selectedLabelList: selectedLabelList,
-        ),
-      );
-      if (res != null) {
-        bloc.add(
-          TodoUpdateChangedTask(
-            taskItem.copyWith(labelIndexList: res),
-          ),
-        );
-      }
-    }
+  // Widget labelPicker({
+  //   required TodoFolder folder,
+  //   required List<Label> labelList,
+  //   required List<String> selectedLabelList,
+  // }) {
+  //   void selectLabel() async {
+  //     final List<String>? res = await Navigator.of(context).push(
+  //       LabelSelectView.route(
+  //         selectedLabelList: selectedLabelList,
+  //       ),
+  //     );
+  //     if (res != null) {
+  //       bloc.add(
+  //         FolderUpdateChangedFolder(
+  //           taskItem.copyWith(labelIndexList: res),
+  //         ),
+  //       );
+  //     }
+  //   }
 
-    if (selectedLabelList.isEmpty) {
-      return ElevatedButton(
-        onPressed: selectLabel,
-        child: const Text("New Label"),
-      );
-    }
-    return Column(
-      children: selectedLabelList.map(
-        (labelIndex) {
-          final index = labelList.indexWhere((e) => e.index == labelIndex);
-          if (index == -1) {
-            return const SizedBox();
-          }
-          return LabelListTile(
-            label: labelList[index],
-            onTap: () {
-              selectLabel();
-            },
-          );
-        },
-      ).toList(),
-    );
-  }
+  //   if (selectedLabelList.isEmpty) {
+  //     return ElevatedButton(
+  //       onPressed: selectLabel,
+  //       child: const Text("New Label"),
+  //     );
+  //   }
+  //   return Column(
+  //     children: selectedLabelList.map(
+  //       (labelIndex) {
+  //         final index = labelList.indexWhere((e) => e.index == labelIndex);
+  //         if (index == -1) {
+  //           return const SizedBox();
+  //         }
+  //         return LabelListTile(
+  //           label: labelList[index],
+  //           onTap: () {
+  //             selectLabel();
+  //           },
+  //         );
+  //       },
+  //     ).toList(),
+  //   );
+  // }
 
   Widget updateButton() {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          bloc.add(TodoUpdateCompleted());
+          bloc.add(FolderUpdateCompleted());
         },
         child: const Text("Update"),
       ),
@@ -136,13 +133,13 @@ class _TodoUpdateViewState extends State<TodoUpdateView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: BlocListener<TodoUpdateBloc, TodoUpdateState>(
+      body: BlocListener<FolderUpdateBloc, FolderUpdateState>(
         listener: (context, state) async {
           final status = state.status;
-          if (status == TodoUpdateViewStatus.completed) {
+          if (status == FolderUpdateViewStatus.completed) {
             Navigator.of(context).pop();
           }
-          if (status == TodoUpdateViewStatus.leave) {
+          if (status == FolderUpdateViewStatus.leave) {
             final isChanged = state.isChanged;
             if (!isChanged) {
               Navigator.of(context).pop();
@@ -172,34 +169,34 @@ class _TodoUpdateViewState extends State<TodoUpdateView> {
             });
           }
         },
-        child: BlocBuilder<TodoUpdateBloc, TodoUpdateState>(
+        child: BlocBuilder<FolderUpdateBloc, FolderUpdateState>(
           builder: (context, state) {
             final status = state.status;
             switch (status) {
-              case TodoUpdateViewStatus.init:
-              case TodoUpdateViewStatus.loading:
+              case FolderUpdateViewStatus.init:
+              case FolderUpdateViewStatus.loading:
                 return const TodoLoading();
-              case TodoUpdateViewStatus.success:
-              case TodoUpdateViewStatus.faiure:
-              case TodoUpdateViewStatus.completed:
-              case TodoUpdateViewStatus.leave:
+              case FolderUpdateViewStatus.success:
+              case FolderUpdateViewStatus.faiure:
+              case FolderUpdateViewStatus.completed:
+              case FolderUpdateViewStatus.leave:
             }
-            final taskItem = state.taskItem;
+            final taskItem = state.folder;
             return ListView(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
               ),
               children: [
                 titleTextField(
-                  taskItem: taskItem,
+                  folder: taskItem,
                   titleController: state.titleController,
                 ),
                 const SizedBox(height: 16.0),
-                labelPicker(
-                  taskItem: taskItem,
-                  labelList: state.labelList,
-                  selectedLabelList: taskItem.labelIndexList,
-                ),
+                // labelPicker(
+                //   taskItem: taskItem,
+                //   labelList: state.labelList,
+                //   selectedLabelList: taskItem.labelIndexList,
+                // ),
                 const SizedBox(height: 16.0),
                 updateButton(),
               ],

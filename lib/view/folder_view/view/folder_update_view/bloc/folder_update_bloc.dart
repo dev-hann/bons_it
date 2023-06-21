@@ -1,37 +1,37 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bons_it/model/todo_folder.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:bons_it/model/label.dart';
-import 'package:bons_it/model/task_item.dart';
 import 'package:bons_it/repository/task/task_repo.dart';
 import 'package:bons_it/use_case/task.dart';
 import 'package:bons_it/util/logger.dart';
 import 'package:bons_it/util/toast.dart';
 
-part 'todo_update_event.dart';
-part 'todo_update_state.dart';
+part 'folder_update_event.dart';
+part 'folder_update_state.dart';
 
-class TodoUpdateBloc extends Bloc<TodoUpdateEvent, TodoUpdateState> {
-  TodoUpdateBloc(TaskRepo repo)
+class FolderUpdateBloc extends Bloc<FolderUpdateEvent, FolderUpdateState> {
+  FolderUpdateBloc(TaskRepo repo)
       : useCase = TaskUseCase(repo),
         super(
-          TodoUpdateState(
-            taskItem: TaskItem(),
+          FolderUpdateState(
+            folder: TodoFolder(),
             titleController: TextEditingController(),
           ),
         ) {
-    on<TodoUpdateStarted>(_onStarted);
-    on<TodoUpdateCompleted>(onCompleted);
-    on<TodoUpdateChangedTask>(_onChangedTask);
-    on<TodoUpdateLeftView>(_onLeftView);
+    on<FolderUpdateStarted>(_onStarted);
+    on<FolderUpdateCompleted>(onCompleted);
+    on<FolderUpdateChangedFolder>(_onChangedTask);
+    on<FolderUpdateLeftView>(_onLeftView);
   }
   final TaskUseCase useCase;
 
   Future<FutureOr<void>> _onStarted(
-      TodoUpdateStarted event, Emitter<TodoUpdateState> emit) async {
-    final taskItem = event.taskItem ?? state.taskItem;
+      FolderUpdateStarted event, Emitter<FolderUpdateState> emit) async {
+    final taskItem = event.folder ?? state.folder;
     final labelListData = await useCase.requestLabelList();
     labelListData.fold(
       (e) {
@@ -41,8 +41,8 @@ class TodoUpdateBloc extends Bloc<TodoUpdateEvent, TodoUpdateState> {
       (list) {
         emit(
           state.copyWith(
-            status: TodoUpdateViewStatus.success,
-            taskItem: taskItem,
+            status: FolderUpdateViewStatus.success,
+            folder: taskItem,
             titleController: TextEditingController(text: taskItem.title),
             labelList: list,
           ),
@@ -72,43 +72,43 @@ class TodoUpdateBloc extends Bloc<TodoUpdateEvent, TodoUpdateState> {
   }
 
   FutureOr<void> onCompleted(
-      TodoUpdateCompleted event, Emitter<TodoUpdateState> emit) async {
-    final option = await useCase.updateTaskItem(state.taskItem);
-    option.fold(
-      () {
-        emit(
-          state.copyWith(
-            status: TodoUpdateViewStatus.completed,
-          ),
-        );
-      },
-      (e) {
-        TodoToast.showError(e);
-      },
-    );
+      FolderUpdateCompleted event, Emitter<FolderUpdateState> emit) async {
+    // final option = await useCase.updateTaskItem(state.taskItem);
+    // option.fold(
+    //   () {
+    //     emit(
+    //       state.copyWith(
+    //         status: TodoUpdateViewStatus.completed,
+    //       ),
+    //     );
+    //   },
+    //   (e) {
+    //     TodoToast.showError(e);
+    //   },
+    // );
   }
 
   FutureOr<void> _onChangedTask(
-      TodoUpdateChangedTask event, Emitter<TodoUpdateState> emit) async {
-    final taskItem = event.taskItem;
+      FolderUpdateChangedFolder event, Emitter<FolderUpdateState> emit) async {
+    final taskItem = event.folder;
     emit(
       state.copyWith(
-        taskItem: taskItem,
+        folder: taskItem,
         isChanged: true,
       ),
     );
   }
 
   FutureOr<void> _onLeftView(
-      TodoUpdateLeftView event, Emitter<TodoUpdateState> emit) {
+      FolderUpdateLeftView event, Emitter<FolderUpdateState> emit) {
     emit(
       state.copyWith(
-        status: TodoUpdateViewStatus.leave,
+        status: FolderUpdateViewStatus.leave,
       ),
     );
     emit(
       state.copyWith(
-        status: TodoUpdateViewStatus.success,
+        status: FolderUpdateViewStatus.success,
       ),
     );
   }

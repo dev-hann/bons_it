@@ -2,35 +2,35 @@ part of 'task_repo.dart';
 
 class TaskImpl extends TaskRepo {
   // Tastk
-  final Map<String, dynamic> testTaskDB = {};
-  final StreamController<String> _taskStreamController =
+  final Map<String, dynamic> testTodoFolderDB = {};
+  final StreamController<String> _folderStreamController =
       StreamController.broadcast();
 
   @override
-  Future removeTaskItem(String index) async {
-    testTaskDB.remove(index);
-    _taskStreamController.add(index);
+  Stream<String> folderStream() {
+    return _folderStreamController.stream;
   }
 
   @override
-  Future<List<dynamic>> requestTskItemList() async {
-    return testTaskDB.values.toList();
+  Future<List> requestTodoFolderList() async {
+    return testTodoFolderDB.values.toList();
   }
 
   @override
-  Future<dynamic> requestTaskItem(String index) async {
-    return testTaskDB[index];
+  Future requestTodoFolder(String index) {
+    return testTodoFolderDB[index];
   }
 
   @override
-  Stream<String> taskStream() {
-    return _taskStreamController.stream;
+  Future updateTodoFolder(String index, Map<String, dynamic> map) async {
+    testTodoFolderDB[index] = map;
+    _folderStreamController.add(index);
   }
 
   @override
-  Future updateTaskItem(String index, Map<String, dynamic> data) async {
-    testTaskDB[index] = data;
-    _taskStreamController.add(index);
+  Future removeTodoFolder(String index) async {
+    testTodoFolderDB.remove(index);
+    _folderStreamController.add(index);
   }
 
   // TaskTag

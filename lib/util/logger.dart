@@ -8,7 +8,7 @@ class TodoLogger {
     _logger.d(message);
   }
 
-  static void error(TodoError error) {
+  static void error(BSError error) {
     _logger.e(error.message, error.runtimeType, error.stackTrace);
   }
 }

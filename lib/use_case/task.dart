@@ -1,7 +1,7 @@
+import 'package:bons_it/model/todo_folder.dart';
 import 'package:dartz/dartz.dart';
 import 'package:bons_it/model/error.dart';
 import 'package:bons_it/model/label.dart';
-import 'package:bons_it/model/task_item.dart';
 import 'package:bons_it/repository/task/task_repo.dart';
 
 class TaskUseCase {
@@ -10,72 +10,113 @@ class TaskUseCase {
 
   // Task
   Stream<String> taskStream() {
-    return repo.taskStream();
+    return repo.folderStream();
   }
 
-  Future<Either<TodoError, TaskItem?>> requestTaskItem(String index) async {
+  Future<Either<BSError, List<TodoFolder>>> requestTodoFolderList() async {
     try {
-      final data = await repo.requestTaskItem(index);
+      final list = await repo.requestTodoFolderList();
+      return Right(
+        list.map((e) => TodoFolder.fromMap(e)).toList(),
+      );
+    } catch (e) {
+      return Left(BSError.fromException(e));
+    }
+  }
+
+  Future<Either<BSError, TodoFolder?>> requestTodoFolder(String index) async {
+    try {
+      final data = await repo.requestTodoFolder(index);
       if (data == null) {
         return const Right(null);
       }
-      return Right(TaskItem.fromMap(data));
+      return Right(TodoFolder.fromMap(data));
     } catch (e) {
-      return Left(TodoError.fromException(e));
+      return Left(BSError.fromException(e));
     }
   }
 
-  Future<Either<TodoError, List<TaskItem>>> reqeustTskItemList() async {
+  Future<Option<BSError>> updateTodoFolder(TodoFolder folder) async {
     try {
-      final listData = await repo.requestTskItemList();
-      return Right(listData.map((e) => TaskItem.fromMap(e)).toList());
-    } catch (e) {
-      return Left(TodoError.fromException(e));
-    }
-  }
-
-  Future<Option<TodoError>> updateTaskItem(TaskItem item) async {
-    try {
-      await repo.updateTaskItem(item.index, item.toMap());
+      await repo.updateTodoFolder(folder.index, folder.toMap());
       return const None();
     } catch (e) {
-      return Some(TodoError.fromException(e));
+      return Some(BSError.fromException(e));
     }
   }
 
-  Future<Option<TodoError>> removeTaskItem(String index) async {
+  Future<Option<BSError>> removeTodoFolder(String index) async {
     try {
-      await repo.removeTaskItem(index);
+      await repo.removeTodoFolder(index);
       return const None();
     } catch (e) {
-      return Some(TodoError.fromException(e));
+      return Some(BSError.fromException(e));
     }
   }
 
-  Future<Either<TodoError, List<TaskItem>>> requestTaskItemList() async {
-    try {
-      final listData = await repo.requestTskItemList();
-      return Right(listData.map((e) => TaskItem.fromMap(e)).toList());
-    } catch (e) {
-      return Left(TodoError.fromException(e));
-    }
-  }
+  // Future<Either<BSError, TodoItem?>> requestTaskItem(String index) async {
+  //   try {
+  //     final data = await repo.requestTaskItem(index);
+  //     if (data == null) {
+  //       return const Right(null);
+  //     }
+  //     return Right(TodoItem.fromMap(data));
+  //   } catch (e) {
+  //     return Left(BSError.fromException(e));
+  //   }
+  // }
+
+  // Future<Either<BSError, List<TodoItem>>> reqeustTskItemList() async {
+  //   try {
+  //     final listData = await repo.requestTskItemList();
+  //     return Right(listData.map((e) => TodoItem.fromMap(e)).toList());
+  //   } catch (e) {
+  //     return Left(BSError.fromException(e));
+  //   }
+  // }
+
+  // Future<Option<BSError>> updateTaskItem(TodoItem item) async {
+  //   try {
+  //     await repo.updateTaskItem(item.index, item.toMap());
+  //     return const None();
+  //   } catch (e) {
+  //     return Some(BSError.fromException(e));
+  //   }
+  // }
+
+  // Future<Option<BSError>> removeTaskItem(String index) async {
+  //   try {
+  //     await repo.removeTaskItem(index);
+  //     return const None();
+  //   } catch (e) {
+  //     return Some(BSError.fromException(e));
+  //   }
+  // }
+
+  // Future<Either<BSError, List<TodoItem>>> requestTaskItemList() async {
+  //   try {
+  //     final listData = await repo.requestTskItemList();
+  //     return Right(listData.map((e) => TodoItem.fromMap(e)).toList());
+  //   } catch (e) {
+  //     return Left(BSError.fromException(e));
+  //   }
+  // }
 
   // Label
   Stream<String> labelStream() {
     return repo.labelStream();
   }
 
-  Future<Either<TodoError, List<Label>>> requestLabelList() async {
+  Future<Either<BSError, List<Label>>> requestLabelList() async {
     try {
       final listData = await repo.requestLabelList();
       return Right(listData.map((e) => Label.fromMap(e)).toList());
     } catch (e) {
-      return Left(TodoError.fromException(e));
+      return Left(BSError.fromException(e));
     }
   }
 
-  Future<Either<TodoError, Label?>> requestLabel(String index) async {
+  Future<Either<BSError, Label?>> requestLabel(String index) async {
     try {
       final data = await repo.reqeustLabel(index);
       if (data == null) {
@@ -83,25 +124,25 @@ class TaskUseCase {
       }
       return Right(Label.fromMap(data));
     } catch (e) {
-      return Left(TodoError.fromException(e));
+      return Left(BSError.fromException(e));
     }
   }
 
-  Future<Option<TodoError>> updateLabel(Label label) async {
+  Future<Option<BSError>> updateLabel(Label label) async {
     try {
       await repo.updateLabel(label.index, label.toMap());
       return const None();
     } catch (e) {
-      return Some(TodoError.fromException(e));
+      return Some(BSError.fromException(e));
     }
   }
 
-  Future<Option<TodoError>> removeLabel(String index) async {
+  Future<Option<BSError>> removeLabel(String index) async {
     try {
       await repo.removeLabel(index);
       return const None();
     } catch (e) {
-      return Some(TodoError.fromException(e));
+      return Some(BSError.fromException(e));
     }
   }
 }

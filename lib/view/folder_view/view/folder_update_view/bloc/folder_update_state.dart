@@ -1,6 +1,6 @@
-part of 'todo_update_bloc.dart';
+part of 'folder_update_bloc.dart';
 
-enum TodoUpdateViewStatus {
+enum FolderUpdateViewStatus {
   init,
   loading,
   success,
@@ -9,17 +9,17 @@ enum TodoUpdateViewStatus {
   leave,
 }
 
-class TodoUpdateState extends Equatable {
-  const TodoUpdateState({
-    this.status = TodoUpdateViewStatus.init,
-    required this.taskItem,
+class FolderUpdateState extends Equatable {
+  const FolderUpdateState({
+    this.status = FolderUpdateViewStatus.init,
+    required this.folder,
     required this.titleController,
     this.isChanged = false,
     this.labelList = const [],
   });
 
-  final TodoUpdateViewStatus status;
-  final TaskItem taskItem;
+  final FolderUpdateViewStatus status;
+  final TodoFolder folder;
   final TextEditingController titleController;
   final bool isChanged;
   final List<Label> labelList;
@@ -27,22 +27,22 @@ class TodoUpdateState extends Equatable {
   @override
   List<Object?> get props => [
         status,
-        taskItem,
+        folder,
         titleController,
         isChanged,
         labelList,
       ];
 
-  TodoUpdateState copyWith({
-    TodoUpdateViewStatus? status,
-    TaskItem? taskItem,
+  FolderUpdateState copyWith({
+    FolderUpdateViewStatus? status,
+    TodoFolder? folder,
     TextEditingController? titleController,
     bool? isChanged,
     List<Label>? labelList,
   }) {
-    return TodoUpdateState(
+    return FolderUpdateState(
       status: status ?? this.status,
-      taskItem: taskItem ?? this.taskItem,
+      folder: folder ?? this.folder,
       titleController: titleController ?? this.titleController,
       isChanged: isChanged ?? this.isChanged,
       labelList: labelList ?? this.labelList,

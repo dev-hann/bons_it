@@ -9,7 +9,7 @@ class TodoToast {
   }
 
   static showError(
-    TodoError error,
+    BSError error,
   ) {
     Fluttertoast.showToast(
       msg: error.message,

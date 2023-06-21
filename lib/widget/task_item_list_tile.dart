@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:bons_it/model/task_item.dart';
+import 'package:bons_it/model/todo_item.dart';
 
 class TaskItemListTile extends StatelessWidget {
   const TaskItemListTile({
@@ -13,7 +13,7 @@ class TaskItemListTile extends StatelessWidget {
     required this.onTapCheck,
   });
   final int index;
-  final TaskItem taskItem;
+  final TodoItem taskItem;
   final VoidCallback onTap;
   final VoidCallback onTapDelete;
   final VoidCallback onTapCheck;

@@ -1,26 +1,26 @@
+import 'package:bons_it/view/folder_view/bloc/_folder_bloc.dart';
+import 'package:bons_it/view/folder_view/view/folder_update_view/folder_update_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:bons_it/model/task_item.dart';
+import 'package:bons_it/model/todo_item.dart';
 import 'package:bons_it/util/dialog.dart';
-import 'package:bons_it/view/todo_view/bloc/todo_bloc.dart';
-import 'package:bons_it/view/todo_view/view/todo_update_view/todo_update_view.dart';
 import 'package:bons_it/widget/task_item_list_tile.dart';
 
-class TodoView extends StatefulWidget {
-  const TodoView({super.key});
+class FolderView extends StatefulWidget {
+  const FolderView({super.key});
 
   @override
-  State<TodoView> createState() => _TodoViewState();
+  State<FolderView> createState() => _FolderViewState();
 }
 
-class _TodoViewState extends State<TodoView> {
-  TodoBloc get bloc => BlocProvider.of(context);
+class _FolderViewState extends State<FolderView> {
+  FolderBloc get bloc => BlocProvider.of(context);
 
   @override
   void initState() {
     super.initState();
-    bloc.add(TodoEventStarted());
+    bloc.add(FolderEventStarted());
   }
 
   void onTapDelete(String index) async {
@@ -46,7 +46,7 @@ class _TodoViewState extends State<TodoView> {
       return;
     }
     bloc.add(
-      TodoEventRemovedTaskItem(index),
+      FolderEventRemovedTaskItem(index),
     );
   }
 
@@ -54,7 +54,7 @@ class _TodoViewState extends State<TodoView> {
     return FloatingActionButton(
       onPressed: () {
         Navigator.of(context).push(
-          TodoUpdateView.route(),
+          FolderUpdateView.route(),
         );
       },
       child: const Icon(Icons.add),
@@ -65,14 +65,17 @@ class _TodoViewState extends State<TodoView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: updateButton(),
-      body: BlocBuilder<TodoBloc, TodoState>(
+      body: BlocBuilder<FolderBloc, TodoState>(
         builder: (context, state) {
           final list = state.itemList;
           if (list.isEmpty) {
-            return const Text("empty");
+            return const Center(
+              child: Text("Empty View"),
+            );
           }
           return SlidableAutoCloseBehavior(
             child: ReorderableList(
+              padding: const EdgeInsets.all(16.0),
               onReorder: (int oldIndex, int newIndex) {},
               itemCount: list.length,
               itemBuilder: (context, index) {
@@ -85,7 +88,7 @@ class _TodoViewState extends State<TodoView> {
                     taskItem: item,
                     onTap: () {
                       Navigator.of(context).push(
-                        TodoUpdateView.route(
+                        FolderUpdateView.route(
                           item: item,
                         ),
                       );
@@ -95,7 +98,7 @@ class _TodoViewState extends State<TodoView> {
                     },
                     onTapCheck: () {
                       bloc.add(
-                        TodoEventUpdatedTaskItem(
+                        FolderEventUpdatedTaskItem(
                           item.copyWith(
                             status: item.status == TaskItemStatus.completed
                                 ? TaskItemStatus.none

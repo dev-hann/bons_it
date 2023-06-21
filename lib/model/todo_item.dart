@@ -8,8 +8,8 @@ enum TaskItemStatus {
   completed,
 }
 
-class TaskItem extends Equatable {
-  TaskItem({
+class TodoItem extends Equatable {
+  TodoItem({
     String? index,
     this.title = "",
     DateTime? dateTime,
@@ -34,14 +34,14 @@ class TaskItem extends Equatable {
         status,
       ];
 
-  TaskItem copyWith({
+  TodoItem copyWith({
     String? index,
     String? title,
     DateTime? dateTime,
     List<String>? labelIndexList,
     TaskItemStatus? status,
   }) {
-    return TaskItem(
+    return TodoItem(
       index: index ?? this.index,
       title: title ?? this.title,
       dateTime: dateTime ?? this.dateTime,
@@ -60,8 +60,8 @@ class TaskItem extends Equatable {
     };
   }
 
-  factory TaskItem.fromMap(Map<String, dynamic> map) {
-    return TaskItem(
+  factory TodoItem.fromMap(Map<String, dynamic> map) {
+    return TodoItem(
       index: map['index'] as String,
       title: map['title'] as String,
       dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime'] as int),
@@ -72,6 +72,6 @@ class TaskItem extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  factory TaskItem.fromJson(String source) =>
-      TaskItem.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory TodoItem.fromJson(String source) =>
+      TodoItem.fromMap(json.decode(source) as Map<String, dynamic>);
 }
