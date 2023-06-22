@@ -1,4 +1,4 @@
-import 'package:bons_it/view/folder_view/bloc/_folder_bloc.dart';
+import 'package:bons_it/view/folder_view/bloc/folder_bloc.dart';
 import 'package:bons_it/view/folder_view/view/folder_update_view/folder_update_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,7 +65,7 @@ class _FolderViewState extends State<FolderView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: updateButton(),
-      body: BlocBuilder<FolderBloc, TodoState>(
+      body: BlocBuilder<FolderBloc, FolderState>(
         builder: (context, state) {
           final list = state.itemList;
           if (list.isEmpty) {
@@ -79,28 +79,28 @@ class _FolderViewState extends State<FolderView> {
               onReorder: (int oldIndex, int newIndex) {},
               itemCount: list.length,
               itemBuilder: (context, index) {
-                final item = list[index];
+                final folder = list[index];
                 return Card(
                   key: ValueKey(index),
                   clipBehavior: Clip.hardEdge,
                   child: TaskItemListTile(
                     index: index,
-                    taskItem: item,
+                    taskItem: folder,
                     onTap: () {
-                      Navigator.of(context).push(
-                        FolderUpdateView.route(
-                          item: item,
-                        ),
-                      );
+                      // Navigator.of(context).push(
+                      //   FolderUpdateView.route(
+                      //     item: item,
+                      //   ),
+                      // );
                     },
                     onTapDelete: () async {
-                      onTapDelete(item.index);
+                      onTapDelete(folder.index);
                     },
                     onTapCheck: () {
                       bloc.add(
                         FolderEventUpdatedTaskItem(
-                          item.copyWith(
-                            status: item.status == TaskItemStatus.completed
+                          folder.copyWith(
+                            status: folder.status == TaskItemStatus.completed
                                 ? TaskItemStatus.none
                                 : TaskItemStatus.completed,
                           ),

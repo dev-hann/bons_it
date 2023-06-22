@@ -1,10 +1,14 @@
-part of '_folder_bloc.dart';
+part of 'folder_bloc.dart';
 
-abstract class FolderState extends Equatable {
-  const FolderState();
+class FolderState extends Equatable {
+  const FolderState({
+    this.itemList = const [],
+  });
+
+  final List<TodoItem> itemList;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [
+        itemList,
+      ];
 }
-
-class FolderInitial extends FolderState {}

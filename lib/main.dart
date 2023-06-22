@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bons_it/repository/task/task_repo.dart';
 import 'package:bons_it/view/home_view/bloc/home_bloc.dart';
 import 'package:bons_it/view/home_view/home_view.dart';
-import 'package:bons_it/view/folder_view/bloc/_folder_bloc.dart';
+import 'package:bons_it/view/folder_view/bloc/folder_bloc.dart';
 import 'package:bons_it/view/label_view/bloc/label_bloc.dart';
 
 void main() {
