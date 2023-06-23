@@ -1,22 +1,12 @@
-import 'package:bons_it/view/dash_board_view/bloc/dash_board_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bons_it/repository/task/task_repo.dart';
 import 'package:bons_it/view/home_view/bloc/home_bloc.dart';
 import 'package:bons_it/view/home_view/home_view.dart';
-import 'package:bons_it/view/folder_view/bloc/folder_bloc.dart';
-import 'package:bons_it/view/label_view/bloc/label_bloc.dart';
+import 'package:bons_it/view/runner_view/bloc/runner_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(
-    MultiBlocProvider(
-      providers: [
-        RepositoryProvider<TaskRepo>(
-          create: (_) => TaskImpl(),
-        )
-      ],
-      child: const MyApp(),
-    ),
+    const MyApp(),
   );
 }
 
@@ -25,7 +15,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final taskRepo = RepositoryProvider.of<TaskRepo>(context);
     return MaterialApp(
       title: 'Bons It',
       debugShowCheckedModeBanner: false,
@@ -33,6 +22,9 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         appBarTheme: const AppBarTheme(
           centerTitle: true,
+        ),
+        cardTheme: const CardTheme(
+          margin: EdgeInsets.zero,
         ),
         useMaterial3: true,
       ),
@@ -42,19 +34,7 @@ class MyApp extends StatelessWidget {
             create: (_) => HomeBloc(),
           ),
           BlocProvider(
-            create: (_) => FolderBloc(
-              taskRepo,
-            ),
-          ),
-          BlocProvider(
-            create: (_) => LabelBloc(
-              taskRepo,
-            ),
-          ),
-          BlocProvider(
-            create: (_) => DashBoardBloc(
-              taskRepo,
-            ),
+            create: (_) => RunnerBloc(),
           ),
         ],
         child: const HomeView(),

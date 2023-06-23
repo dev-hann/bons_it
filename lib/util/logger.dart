@@ -1,5 +1,5 @@
-import 'package:logger/logger.dart';
 import 'package:bons_it/model/error.dart';
+import 'package:logger/logger.dart';
 
 class TodoLogger {
   static final Logger _logger = Logger();
